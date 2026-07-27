@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { searchUnsplashPhotos, getUnsplashApiKey, type UnsplashPhoto } from '../../api'
 
 interface ImagePickerModalProps {
   isOpen: boolean
@@ -18,6 +19,19 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
   const [activeTab, setActiveTab] = useState<'upload' | 'stock'>('upload')
   const [previewUrl, setPreviewUrl] = useState<string>(currentImageUrl)
 
+  // Unsplash Search State
+  const [searchQuery, setSearchQuery] = useState('')
+  const [unsplashPhotos, setUnsplashPhotos] = useState<UnsplashPhoto[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [unsplashError, setUnsplashError] = useState('')
+
+  useEffect(() => {
+    if (isOpen) {
+      setPreviewUrl(currentImageUrl)
+      setUnsplashError('')
+    }
+  }, [isOpen, currentImageUrl])
+
   if (!isOpen) return null
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +45,36 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  const handleSearchUnsplash = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    if (!searchQuery.trim()) return
+
+    const apiKey = getUnsplashApiKey()
+    if (!apiKey) {
+      setUnsplashError('No has configurado tu clave de API de Unsplash. Configúrala en el botón de ajustes ⚙️.')
+      return
+    }
+
+    setIsSearching(true)
+    setUnsplashError('')
+
+    try {
+      const response = await searchUnsplashPhotos(searchQuery.trim(), 1, 12)
+      setUnsplashPhotos(response.results)
+      if (response.results.length === 0) {
+        setUnsplashError('No se encontraron imágenes para esta búsqueda.')
+      }
+    } catch (err: any) {
+      setUnsplashError(err.message || 'Error al buscar en Unsplash.')
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  const handleSelectUnsplashPhoto = (photo: UnsplashPhoto) => {
+    setPreviewUrl(photo.urls.regular)
   }
 
   const handleConfirm = () => {
@@ -51,7 +95,8 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="glass-modal p-4 p-md-5 col-11 col-sm-9 col-md-6 col-lg-5 text-start position-relative"
+        className="glass-modal p-4 p-md-5 col-11 col-sm-10 col-md-8 col-lg-6 text-start position-relative"
+        style={{ maxHeight: '90vh', overflowY: 'auto' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -87,7 +132,7 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
             onClick={() => setActiveTab('stock')}
           >
             <span className="material-symbols-outlined fs-6">travel_explore</span>
-            Banco de Imágenes
+            Unsplash Stock
           </button>
         </div>
 
@@ -139,17 +184,104 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
           </div>
         )}
 
-        {/* Tab 2: Banco de Imágenes (Placeholder) */}
+        {/* Tab 2: Banco de Imágenes Unsplash */}
         {activeTab === 'stock' && (
-          <div className="text-center py-5">
-            <span className="material-symbols-outlined fs-1 text-secondary mb-2">image_search</span>
-            <h5 className="fw-semibold mb-2">Buscador de Unsplash / Pexels</h5>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-              Esta función te permitirá buscar y usar fotos libres de derechos directamente desde la app.
-            </p>
-            <span className="badge bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-pill mt-2">
-              Próximamente
-            </span>
+          <div>
+            <form onSubmit={handleSearchUnsplash} className="d-flex gap-2 mb-3">
+              <input
+                type="text"
+                className="form-control text-light border-0 px-3 py-2"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.9rem',
+                }}
+                placeholder="Buscar en Unsplash (ej. tecnología, negocios)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button
+                type="submit"
+                disabled={isSearching}
+                className="flat-btn py-2 px-3 rounded-3 d-flex align-items-center gap-1"
+                style={{ fontSize: '0.85rem' }}
+              >
+                {isSearching ? (
+                  <span className="spinner-border spinner-border-sm" role="status"></span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined fs-6">search</span>
+                    Buscar
+                  </>
+                )}
+              </button>
+            </form>
+
+            {unsplashError && (
+              <div
+                className="p-3 mb-3 rounded-3 text-center"
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#f87171',
+                  fontSize: '0.85rem',
+                }}
+              >
+                {unsplashError}
+              </div>
+            )}
+
+            {/* Grid de Fotos de Unsplash */}
+            {unsplashPhotos.length > 0 && (
+              <div className="row g-2 mb-3" style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                {unsplashPhotos.map((photo) => (
+                  <div key={photo.id} className="col-4 col-sm-3">
+                    <div
+                      onClick={() => handleSelectUnsplashPhoto(photo)}
+                      className={`position-relative rounded-3 overflow-hidden ${
+                        previewUrl === photo.urls.regular ? 'ring-2 ring-primary border border-primary' : ''
+                      }`}
+                      style={{
+                        height: '90px',
+                        cursor: 'pointer',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: previewUrl === photo.urls.regular ? '2px solid #3b82f6' : '1px solid transparent',
+                      }}
+                    >
+                      <img
+                        src={photo.urls.small}
+                        alt={photo.alt_description || 'Unsplash photo'}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!isSearching && unsplashPhotos.length === 0 && !unsplashError && (
+              <div className="text-center py-4" style={{ color: 'var(--text-secondary)' }}>
+                <span className="material-symbols-outlined fs-2 mb-1">image_search</span>
+                <p className="mb-0" style={{ fontSize: '0.85rem' }}>
+                  Ingresa un término arriba para buscar fotografías gratuitas en alta resolución.
+                </p>
+              </div>
+            )}
+
+            {/* Vista previa seleccionada */}
+            {previewUrl && (
+              <div className="p-2 rounded-3 mb-2 d-flex align-items-center gap-3" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                <img
+                  src={previewUrl}
+                  alt="Seleccionada"
+                  style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '6px' }}
+                />
+                <span className="text-success fw-medium" style={{ fontSize: '0.85rem' }}>
+                  ✓ Imagen seleccionada
+                </span>
+              </div>
+            )}
           </div>
         )}
 
@@ -163,7 +295,7 @@ export const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
           >
             Cancelar
           </button>
-          {activeTab === 'upload' && previewUrl && (
+          {previewUrl && (
             <button
               type="button"
               className="flat-btn py-2 px-4 rounded-3"

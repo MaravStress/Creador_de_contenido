@@ -60,20 +60,40 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectContentType }) =
         {/* Placeholders futuros */}
         <div className="col-12 col-md-6 col-lg-4 opacity-50">
           <ContentTypeCard
-            title="Historias de Instagram"
-            description="Crea plantillas verticales dinámicas e interactivas para tu contenido diario."
+            title="Un día de un futuro millonario"
+            description="Plantillas inspiracionales para mostrar rutinas de éxito y lifestyle."
             badgeText="Próximamente"
-            iconName="crop_portrait"
+            iconName="paid"
             onClick={() => {}}
           />
         </div>
 
         <div className="col-12 col-md-6 col-lg-4 opacity-50">
           <ContentTypeCard
-            title="Hilos de X / Twitter"
-            description="Redacta y visualiza publicaciones en secuencia optimizadas para lectura rápida."
+            title="Recomendación literaria"
+            description="Formatos atractivos para reseñar y sugerir tus libros favoritos."
             badgeText="Próximamente"
-            iconName="chat"
+            iconName="menu_book"
+            onClick={() => {}}
+          />
+        </div>
+
+        <div className="col-12 col-md-6 col-lg-4 opacity-50">
+          <ContentTypeCard
+            title="Video en general"
+            description="Plantillas base para edición y conceptualización de contenido en video."
+            badgeText="Próximamente"
+            iconName="movie"
+            onClick={() => {}}
+          />
+        </div>
+
+        <div className="col-12 col-md-6 col-lg-4 opacity-50">
+          <ContentTypeCard
+            title="Una imagen en general"
+            description="Diseña publicaciones gráficas estáticas con gran impacto visual."
+            badgeText="Próximamente"
+            iconName="image"
             onClick={() => {}}
           />
         </div>

@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Instagram Carousel Editor Styles
+   ========================================================================== */
+
+/* Main Layout Container */
+.editor-main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1rem 1.5rem;
+  overflow: hidden;
+}
+
+/* Control Table Styles & Keyboard Focus */
+.table-row-glass {
+  transition: background-color 0.2s var(--ease-apple), border-color 0.2s var(--ease-apple);
+}
+
+.table-row-glass:focus-within {
+  background-color: rgba(255, 255, 255, 0.035) !important;
+}
+
+.table-header-title {
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.25), 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+.table-input-glass {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  font-size: 0.85rem !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+}
+
+.table-btn-glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s var(--ease-apple);
+}
+
+.table-btn-glass:hover,
+.table-btn-glass:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.delete-btn-glass {
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  transition: all 0.2s var(--ease-apple);
+  flex-shrink: 0;
+}
+
+.delete-btn-glass:hover {
+  background: rgba(255, 69, 58, 0.15);
+  border-color: rgba(255, 69, 58, 0.4);
+  color: var(--apple-red);
+}
+
+.delete-btn-glass:focus-visible {
+  outline: 2px solid var(--apple-red) !important;
+  box-shadow: 0 0 0 4px rgba(255, 69, 58, 0.4) !important;
+  background: rgba(255, 69, 58, 0.2);
+  color: var(--apple-red);
+}
+
+/* Carousel Preview Card & Track */
+.carousel-preview-track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 1rem 0.5rem;
+  align-items: center;
+  flex-grow: 1;
+}
+
+/* 5-Element Split Card Layout (Exact Reference Match) */
+.carousel-card-split {
+  width: 420px;
+  height: 525px; /* Proporción exacta 4:5 (1080 x 1350) */
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+  background-color: #121318;
+}
+
+.carousel-half-section {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.5rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.carousel-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.carousel-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.8) 100%),
+              linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+}
+
+.carousel-overlay-text {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  text-align: center;
+  margin: 0;
+  line-height: 1.25;
+  width: 100%;
+  padding: 0 0.5rem;
+}
+
+.carousel-divider-line {
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 9999px;
+  z-index: 3;
+  flex-shrink: 0;
+}
+
+.carousel-counter-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 4;
+}

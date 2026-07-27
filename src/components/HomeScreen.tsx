@@ -15,10 +15,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectContentType }) =
       <header className="mb-5 d-flex justify-content-between align-items-start">
         <div className="text-start">
           <span
-            className="text-uppercase fw-semibold px-3 py-1 rounded-pill d-inline-block mb-2"
+            className="text-uppercase fw-semibold px-3 py-1 rounded-pill d-inline-block mb-3"
             style={{
               background: 'rgba(255, 255, 255, 0.05)',
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               letterSpacing: '0.08em',
               color: 'var(--text-secondary)',
               border: '1px solid var(--glass-border)',
@@ -26,15 +26,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectContentType }) =
           >
             Creador de Contenido
           </span>
-          <h1 className="display-5 fw-bold mb-2" style={{ letterSpacing: '-0.02em' }}>
+          <h1 className="display-5 fw-bold mb-2" style={{ letterSpacing: '-0.025em' }}>
             ¿Qué vas a crear hoy?
           </h1>
-          <p className="lead" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-            Selecciona un tipo de formato para comenzar a diseñar y editar tus publicaciones.
+          <p className="lead" style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '580px' }}>
+            Selecciona un tipo de formato para comenzar a diseñar y editar tus publicaciones con asistencia de Inteligencia Artificial.
           </p>
         </div>
 
-        {/* Botón de Configuración (Solo icono de Google Fonts) */}
+        {/* Botón de Configuración (Apple Glass Circle) */}
         <button
           className="icon-btn"
           title="Configuración de APIs de IA"
@@ -50,7 +50,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectContentType }) =
         <div className="col-12 col-md-6 col-lg-4">
           <ContentTypeCard
             title="Carruseles de Instagram"
-            description="Diseña secuencias dinámicas de láminas para cautivar a tu audiencia en Instagram."
+            description="Diseña secuencias comparativas 'Esto No vs Esto Sí' en formato vertical 4:5 asistidas por IA."
             badgeText="Disponible"
             iconName="view_carousel"
             onClick={() => onSelectContentType('instagram-carousel')}

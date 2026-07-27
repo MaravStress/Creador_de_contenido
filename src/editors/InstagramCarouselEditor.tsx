@@ -95,7 +95,6 @@ export const InstagramCarouselEditor: React.FC<InstagramCarouselEditorProps> = (
   }
 
   const handleDeleteRow = (slideId: string) => {
-    if (slides.length <= 1) return
     setSlides((prev) => prev.filter((s) => s.id !== slideId))
   }
 
@@ -109,6 +108,19 @@ export const InstagramCarouselEditor: React.FC<InstagramCarouselEditorProps> = (
 
     const prompt = `Actúa como un experto en creación de contenido para redes sociales. 
 Genera exactamente 4 pares comparativos para la temática "${topicInput.trim()}" usando el formato "No hagas esto, mejor haz esto".
+
+Aquí tienes un ejemplo del tono, estilo y formato JSON exacto que busco:
+[
+  {
+    "dontDo": "No duermas 4 horas",
+    "doInstead": "Duerme 8 horas"
+  },
+  {
+    "dontDo": "No pases 8 horas en redes sociales",
+    "doInstead": "mejor lee un libro de finanzas"
+  }
+]
+
 Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin texto ni formato adicional fuera del JSON:
 [
   { "dontDo": "descripción concisa de lo que no debe hacer", "doInstead": "descripción concisa de la solución o buena práctica" },
@@ -127,7 +139,7 @@ Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin te
           doInstead: { text: item.doInstead || item.mejorHazEsto || '', imageUrl: '' },
         }))
 
-        setSlides(newSlides)
+        setSlides((prev) => [...prev, ...newSlides])
         setTopicInput('')
       } else {
         throw new Error('La respuesta recibida no contiene una lista válida.')

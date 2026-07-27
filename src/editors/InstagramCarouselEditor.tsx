@@ -9,7 +9,7 @@ import {
   ImagePickerModal,
   CarouselSettingsModal,
 } from '../components/InstagramCarouselEditor'
-import { generateTextWithGemini } from '../api'
+import { generateTextWithGemini, searchUnsplashPhotos, getUnsplashApiKey } from '../api'
 import '../styles/InstagramCarouselEditor.css'
 
 interface InstagramCarouselEditorProps {
@@ -98,6 +98,25 @@ export const InstagramCarouselEditor: React.FC<InstagramCarouselEditorProps> = (
     setSlides((prev) => prev.filter((s) => s.id !== slideId))
   }
 
+  // Helper para obtener una imagen aleatoria entre las primeras 5 de Unsplash
+  const fetchRandomUnsplashImage = async (keyword?: string): Promise<string> => {
+    if (!keyword || !keyword.trim()) return ''
+    const apiKey = getUnsplashApiKey()
+    if (!apiKey) return ''
+
+    try {
+      const response = await searchUnsplashPhotos(keyword.trim(), 1, 5)
+      if (response.results && response.results.length > 0) {
+        const limit = Math.min(response.results.length, 5)
+        const randomIndex = Math.floor(Math.random() * limit)
+        return response.results[randomIndex]?.urls?.regular || ''
+      }
+    } catch (err) {
+      console.warn('No se pudo obtener imagen de Unsplash para:', keyword, err)
+    }
+    return ''
+  }
+
   // Generación con IA (Gemini 2.5 Flash)
   const handleGenerateFromAi = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,25 +125,34 @@ export const InstagramCarouselEditor: React.FC<InstagramCarouselEditorProps> = (
     setIsGeneratingAi(true)
     setAiError('')
 
-    const prompt = `Actúa como un experto en creación de contenido para redes sociales. 
-Genera exactamente 4 pares comparativos para la temática "${topicInput.trim()}" usando el formato "No hagas esto, mejor haz esto".
+    const prompt = `Actúa como un experto estratega de contenido para redes sociales. 
+Genera exactamente 4 pares comparativos muy directos y concisos para la temática "${topicInput.trim()}".
 
-Aquí tienes un ejemplo del tono, estilo y formato JSON exacto que busco:
+REGLAS OBLIGATORIAS DE ESTILO:
+1. CORTAS Y CONCISAS: Cada frase debe ser breve, directa y de lectura rápida (máximo 6 a 10 palabras por texto).
+2. ESTRUCTURA Y LENGUAJE IMPERATIVO ENFÁTICO:
+   - "dontDo": Debe iniciar SIEMPRE con frases de prohibición o advertencia directa como "No hagas...", "Evita...", "Nunca...", "No utilices...".
+   - "doInstead": Debe iniciar SIEMPRE con frases de recomendación o acción directa como "Mejor haz...", "Aplica...", "Opta por...", "Usa...".
+3. PALABRAS CLAVE PARA UN SPLASH: Provee 1 o 2 palabras clave concisas EN INGLÉS para buscar la foto representativa en Unsplash.
+
+Ejemplo del formato JSON exacto que busco:
 [
   {
-    "dontDo": "No duermas 4 horas",
-    "doInstead": "Duerme 8 horas"
-  },
-  {
-    "dontDo": "No pases 8 horas en redes sociales",
-    "doInstead": "mejor lee un libro de finanzas"
+    "dontDo": "No hagas tomas con luz cenital directa",
+    "dontDoKeyword": "harsh light portrait",
+    "doInstead": "Mejor usa luz difusa en ángulo de 45°",
+    "doInsteadKeyword": "soft light portrait"
   }
 ]
 
-Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin texto ni formato adicional fuera del JSON:
+Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin ningún texto ni formato adicional fuera del JSON:
 [
-  { "dontDo": "descripción concisa de lo que no debe hacer", "doInstead": "descripción concisa de la solución o buena práctica" },
-  ...
+  { 
+    "dontDo": "No hagas...", 
+    "dontDoKeyword": "1-2 palabras clave en inglés",
+    "doInstead": "Mejor haz...",
+    "doInsteadKeyword": "1-2 palabras clave en inglés"
+  }
 ]`
 
     try {
@@ -133,11 +161,23 @@ Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin te
       const parsedArray = JSON.parse(cleanJsonStr)
 
       if (Array.isArray(parsedArray) && parsedArray.length > 0) {
-        const newSlides: CarouselSlide[] = parsedArray.map((item: any, index: number) => ({
-          id: `${Date.now()}-${index}`,
-          dontDo: { text: item.dontDo || item.noHagasEsto || '', imageUrl: '' },
-          doInstead: { text: item.doInstead || item.mejorHazEsto || '', imageUrl: '' },
-        }))
+        const newSlides: CarouselSlide[] = await Promise.all(
+          parsedArray.map(async (item: any, index: number) => {
+            const dontDoKeyword = item.dontDoKeyword || item.dontDo || ''
+            const doInsteadKeyword = item.doInsteadKeyword || item.doInstead || ''
+
+            const [dontDoImg, doInsteadImg] = await Promise.all([
+              fetchRandomUnsplashImage(dontDoKeyword),
+              fetchRandomUnsplashImage(doInsteadKeyword),
+            ])
+
+            return {
+              id: `${Date.now()}-${index}`,
+              dontDo: { text: item.dontDo || item.noHagasEsto || '', imageUrl: dontDoImg },
+              doInstead: { text: item.doInstead || item.mejorHazEsto || '', imageUrl: doInsteadImg },
+            }
+          })
+        )
 
         setSlides((prev) => [...prev, ...newSlides])
         setTopicInput('')

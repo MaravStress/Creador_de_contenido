@@ -107,6 +107,18 @@
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
   box-sizing: border-box;
   background-color: #121318;
+  transition: border-radius 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Modificador durante la exportación a PNG (Esquinas rectas y sin contador) */
+.carousel-card-split.is-exporting {
+  border-radius: 0px !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.carousel-card-split.is-exporting .carousel-counter-badge {
+  display: none !important;
 }
 
 .carousel-half-section {

@@ -7,6 +7,7 @@ interface CarouselSlideCardProps {
   totalSlides: number
   config: CarouselConfig
   cardRef: (el: HTMLDivElement | null) => void
+  isExporting?: boolean
 }
 
 export const CarouselSlideCard: React.FC<CarouselSlideCardProps> = ({
@@ -15,6 +16,7 @@ export const CarouselSlideCard: React.FC<CarouselSlideCardProps> = ({
   totalSlides,
   config,
   cardRef,
+  isExporting = false,
 }) => {
   // Estilo de sombra de texto configurable
   const textShadowStyle = {
@@ -24,17 +26,20 @@ export const CarouselSlideCard: React.FC<CarouselSlideCardProps> = ({
   return (
     <div
       ref={cardRef}
-      className="carousel-card-split"
+      className={`carousel-card-split ${isExporting ? 'is-exporting' : ''}`}
       style={{
         backgroundColor: config.cardBgColor,
         color: config.textColor,
         fontFamily: `'${config.fontFamily}', sans-serif`,
+        borderRadius: isExporting ? '0px' : undefined,
       }}
     >
-      {/* Contador de lámina estilo cristal */}
-      <span className="carousel-counter-badge">
-        {index + 1} / {totalSlides}
-      </span>
+      {/* Contador de lámina estilo cristal (se oculta durante la exportación a PNG) */}
+      {!isExporting && (
+        <span className="carousel-counter-badge">
+          {index + 1} / {totalSlides}
+        </span>
+      )}
 
       {/* 1. SECCIÓN SUPERIOR: Imagen Arriba + Texto Overlay Arriba */}
       <div className="carousel-half-section">

@@ -6,12 +6,14 @@ interface CarouselPreviewProps {
   slides: CarouselSlide[]
   config: CarouselConfig
   slideRefs: React.MutableRefObject<{ [key: string]: HTMLDivElement | null }>
+  isExporting?: boolean
 }
 
 export const CarouselPreview: React.FC<CarouselPreviewProps> = ({
   slides,
   config,
   slideRefs,
+  isExporting = false,
 }) => {
   const previewTrackRef = useRef<HTMLDivElement>(null)
 
@@ -45,6 +47,7 @@ export const CarouselPreview: React.FC<CarouselPreviewProps> = ({
             index={index}
             totalSlides={slides.length}
             config={config}
+            isExporting={isExporting}
             cardRef={(el) => (slideRefs.current[slide.id] = el)}
           />
         ))}

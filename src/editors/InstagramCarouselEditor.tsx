@@ -169,22 +169,31 @@ Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin te
     }
   }
 
-  // Exportar PNG
+  const [isExporting, setIsExporting] = useState(false)
+
+  // Exportar PNG (quita contador y bordes redondeados durante el guardado)
   const handleExportPng = async () => {
-    for (let i = 0; i < slides.length; i++) {
-      const slide = slides[i]
-      const node = slideRefs.current[slide.id]
-      if (node) {
-        try {
-          const dataUrl = await toPng(node, { quality: 0.98, pixelRatio: 3 })
-          const link = document.createElement('a')
-          link.download = `carrusel-lamina-${i + 1}.png`
-          link.href = dataUrl
-          link.click()
-        } catch (err) {
-          console.error(`Error al exportar lámina ${i + 1}:`, err)
+    setIsExporting(true)
+    await new Promise((resolve) => setTimeout(resolve, 80))
+
+    try {
+      for (let i = 0; i < slides.length; i++) {
+        const slide = slides[i]
+        const node = slideRefs.current[slide.id]
+        if (node) {
+          try {
+            const dataUrl = await toPng(node, { quality: 0.98, pixelRatio: 3 })
+            const link = document.createElement('a')
+            link.download = `carrusel-lamina-${i + 1}.png`
+            link.href = dataUrl
+            link.click()
+          } catch (err) {
+            console.error(`Error al exportar lámina ${i + 1}:`, err)
+          }
         }
       }
+    } finally {
+      setIsExporting(false)
     }
   }
 
@@ -227,6 +236,7 @@ Responde ÚNICAMENTE con un arreglo JSON válido en el siguiente formato, sin te
           slides={slides}
           config={config}
           slideRefs={slideRefs}
+          isExporting={isExporting}
         />
       </div>
 

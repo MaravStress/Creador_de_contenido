@@ -4,7 +4,7 @@ interface ContentTypeCardProps {
   title: string
   description: string
   badgeText?: string
-  icon?: React.ReactNode
+  iconName?: string
   onClick: () => void
 }
 
@@ -12,7 +12,7 @@ export const ContentTypeCard: React.FC<ContentTypeCardProps> = ({
   title,
   description,
   badgeText = 'Disponible',
-  icon,
+  iconName = 'view_carousel',
   onClick,
 }) => {
   return (
@@ -38,17 +38,13 @@ export const ContentTypeCard: React.FC<ContentTypeCardProps> = ({
             className="d-flex align-items-center justify-content-center rounded-3 p-2"
             style={{
               background: 'rgba(255, 255, 255, 0.05)',
-              width: '42px',
-              height: '42px',
+              width: '44px',
+              height: '44px',
             }}
           >
-            {icon || (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-            )}
+            <span className="material-symbols-outlined text-primary fs-4">
+              {iconName}
+            </span>
           </div>
           <span
             className="badge rounded-pill text-uppercase px-2 py-1"
@@ -72,10 +68,7 @@ export const ContentTypeCard: React.FC<ContentTypeCardProps> = ({
 
       <div className="pt-3 d-flex align-items-center justify-content-between border-top" style={{ borderColor: 'rgba(255, 255, 255, 0.05)' }}>
         <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Crear nuevo</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
+        <span className="material-symbols-outlined fs-5">arrow_forward</span>
       </div>
     </div>
   )

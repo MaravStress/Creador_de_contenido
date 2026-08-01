@@ -1,0 +1,15 @@
+{
+  "shortcuts": {
+    "cut": "B",
+    "select": "A",
+    "split": "C",
+    "toggleSnap": "N",
+    "playPause": "Space",
+    "unlinkAudioVideo": "Ctrl+L",
+    "deleteClip": "Backspace",
+    "rippleDelete": "Shift+Backspace",
+    "copy": "Ctrl+C",
+    "paste": "Ctrl+V",
+    "duplicate": "Alt+Drag"
+  }
+}

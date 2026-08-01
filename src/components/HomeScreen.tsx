@@ -78,13 +78,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectContentType }) =
           />
         </div>
 
-        <div className="col-12 col-md-6 col-lg-4 opacity-50">
+        <div className="col-12 col-md-6 col-lg-4">
           <ContentTypeCard
             title="Video en general"
-            description="Plantillas base para edición y conceptualización de contenido en video."
-            badgeText="Próximamente"
+            description="Línea de tiempo multipista, enlace video/audio y herramientas inspiradas en DaVinci Resolve."
+            badgeText="Disponible"
             iconName="movie"
-            onClick={() => {}}
+            onClick={() => onSelectContentType('video-editor')}
           />
         </div>
 

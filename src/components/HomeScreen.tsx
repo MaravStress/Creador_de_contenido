@@ -58,43 +58,33 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectContentType }) =
         </div>
 
         {/* Placeholders futuros */}
-        <div className="col-12 col-md-6 col-lg-4 opacity-50">
-          <ContentTypeCard
-            title="Un día de un futuro millonario"
-            description="Plantillas inspiracionales para mostrar rutinas de éxito y lifestyle."
-            badgeText="Próximamente"
-            iconName="paid"
-            onClick={() => {}}
-          />
-        </div>
-
-        <div className="col-12 col-md-6 col-lg-4 opacity-50">
-          <ContentTypeCard
-            title="Recomendación literaria"
-            description="Formatos atractivos para reseñar y sugerir tus libros favoritos."
-            badgeText="Próximamente"
-            iconName="menu_book"
-            onClick={() => {}}
-          />
-        </div>
-
         <div className="col-12 col-md-6 col-lg-4">
           <ContentTypeCard
             title="Video en general"
             description="Línea de tiempo multipista, enlace video/audio y herramientas inspiradas en DaVinci Resolve."
-            badgeText="Disponible"
+            badgeText="En construcción"
             iconName="movie"
             onClick={() => onSelectContentType('video-editor')}
           />
         </div>
 
-        <div className="col-12 col-md-6 col-lg-4 opacity-50">
+        <div className="col-12 col-md-6 col-lg-4">
           <ContentTypeCard
-            title="Una imagen en general"
-            description="Diseña publicaciones gráficas estáticas con gran impacto visual."
-            badgeText="Próximamente"
-            iconName="image"
-            onClick={() => {}}
+            title="Limpieza de Audio"
+            description="Elimina ruido de fondo y mejora la claridad de la voz en tus grabaciones con IA local."
+            badgeText="Disponible"
+            iconName="record_voice_over"
+            onClick={() => onSelectContentType('audio-cleanup')}
+          />
+        </div>
+
+        <div className="col-12 col-md-6 col-lg-4">
+          <ContentTypeCard
+            title="Mix Videos"
+            description="Crea variaciones de videos mezclándolos entre sí con todas las combinaciones posibles."
+            badgeText="Disponible"
+            iconName="shuffle"
+            onClick={() => onSelectContentType('video-mix')}
           />
         </div>
       </div>
